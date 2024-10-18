@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加用户 - 江西软件职业技术大学校园新闻系统</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>江西软件职业技术大学校园新闻系统</h1>
+        <nav>
+            <a href="/">首页</a>
+            <a href="/add">添加新闻</a>
+            <a href="/users">用户管理</a>
+            <a href="/logout">注销 (<%= user.name %>)</a>
+        </nav>
+    </header>
+    <main>
+        <h2>添加用户</h2>
+        <form action="/users/add" method="POST" class="user-form">
+            <div>
+                <label for="username">用户名：</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="password">密码：</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div>
+                <label for="name">姓名：</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div>
+                <label for="role">角色：</label>
+                <select id="role" name="role" required>
+                    <option value="admin">管理员</option>
+                    <option value="teacher">教师</option>
+                    <option value="student">学生</option>
+                </select>
+            </div>
+            <button type="submit">添加用户</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2023 江西软件职业技术大学校园新闻系统</p>
+    </footer>
+</body>
+</html>

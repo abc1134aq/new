@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= newsItem.title %> - 江西软件职业技术大学校园新闻系统</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    <main>
+        <article class="news-detail">
+            <h2><%= newsItem.title %></h2>
+            <p class="date"><%= moment(newsItem.date).format('YYYY年MM月DD日') %> | <%= newsItem.category %> | 作者: <%= newsItem.author %> | 浏览量: <%= newsItem.views %></p>
+            <div class="content">
+                <%= newsItem.content %>
+            </div>
+            <% if (user.role === 'admin') { %>
+                <div class="actions">
+                    <a href="/edit/<%= newsItem.id %>" class="edit-btn">编辑</a>
+                    <form action="/delete/<%= newsItem.id %>" method="POST" class="delete-form">
+                        <button type="submit" class="delete-btn">删除</button>
+                    </form>
+                </div>
+            <% } %>
+        </article>
+        <section class="comments">
+            <h3>评论 (<%= newsItem.comments.length %>)</h3>
+            <ul class="comment-list">
+                <% newsItem.comments.forEach(comment => { %>
+                    <li>
+                        <p class="comment-author"><%= comment.author %> 说：</p>
+                        <p class="comment-content"><%= comment.content %></p>
+                        <p class="comment-date"><%= moment(comment.date).format('YYYY-MM-DD HH:mm:ss') %></p>
+                    </li>
+                <% }); %>
+            </ul>
+            <form action="/news/<%= newsItem.id %>/comment" method="POST" class="comment-form">
+                <textarea name="content" placeholder="发表评论..." required></textarea>
+                <button type="submit">提交评论</button>
+            </form>
+        </section>
+    </main>
+    <%- include('partials/footer') %>
+</body>
+</html>

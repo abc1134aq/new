@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑用户 - 江西软件职业技术大学校园新闻系统</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>江西软件职业技术大学校园新闻系统</h1>
+        <nav>
+            <a href="/">首页</a>
+            <a href="/add">添加新闻</a>
+            <a href="/users">用户管理</a>
+            <a href="/logout">注销 (<%= user.name %>)</a>
+        </nav>
+    </header>
+    <main>
+        <h2>编辑用户</h2>
+        <form action="/users/edit/<%= userToEdit.id %>" method="POST" class="user-form">
+            <div>
+                <label for="username">用户名：</label>
+                <input type="text" id="username" name="username" value="<%= userToEdit.username %>" required>
+            </div>
+            <div>
+                <label for="password">密码：</label>
+                <input type="password" id="password" name="password" placeholder="留空表示不修改密码">
+            </div>
+            <div>
+                <label for="name">姓名：</label>
+                <input type="text" id="name" name="name" value="<%= userToEdit.name %>" required>
+            </div>
+            <div>
+                <label for="role">角色：</label>
+                <select id="role" name="role" required>
+                    <option value="admin" <%= userToEdit.role === 'admin' ? 'selected' : '' %>>管理员</option>
+                    <option value="teacher" <%= userToEdit.role === 'teacher' ? 'selected' : '' %>>教师</option>
+                    <option value="student" <%= userToEdit.role === 'student' ? 'selected' : '' %>>学生</option>
+                </select>
+            </div>
+            <button type="submit">更新用户</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2023 江西软件职业技术大学校园新闻系统</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>江西软件职业技术大学校园新闻系统</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <main>
+        <div class="dashboard">
+            <div class="stat-card">
+                <h3>总新闻数</h3>
+                <p><%= news.length %></p>
+            </div>
+            <div class="stat-card">
+                <h3>总浏览量</h3>
+                <p><%= news.reduce((sum, item) => sum + item.views, 0) %></p>
+            </div>
+            <div class="stat-card">
+                <h3>总评论数</h3>
+                <p><%= news.reduce((sum, item) => sum + item.comments.length, 0) %></p>
+            </div>
+        </div>
+        <div class="filters">
+            <div class="categories">
+                <a href="/" class="<%= !currentCategory ? 'active' : '' %>">全部</a>
+                <% categories.forEach(cat => { %>
+                    <a href="/?category=<%= cat %>" class="<%= currentCategory === cat ? 'active' : '' %>"><%= cat %></a>
+                <% }); %>
+            </div>
+            <form action="/" method="GET" class="search-form">
+                <input type="text" name="search" placeholder="搜索新闻..." value="<%= search %>">
+                <select name="sort">
+                    <option value="date" <%= sort === 'date' ? 'selected' : '' %>>按日期排序</option>
+                    <option value="views" <%= sort === 'views' ? 'selected' : '' %>>按浏览量排序</option>
+                </select>
+                <button type="submit">搜索</button>
+            </form>
+        </div>
+        <h2>最新新闻</h2>
+        <ul class="news-list">
+            <% news.forEach(item => { %>
+                <li>
+                    <h3><a href="/news/<%= item.id %>"><%= item.title %></a></h3>
+                    <p class="date"><%= moment(item.date).format('YYYY年MM月DD日') %> | <%= item.category %> | 作者: <%= item.author %> | 浏览量: <%= item.views %> | 评论: <%= item.comments.length %></p>
+                    <% if (user.role === 'admin') { %>
+                        <div class="actions">
+                            <a href="/edit/<%= item.id %>" class="edit-btn">编辑</a>
+                            <form action="/delete/<%= item.id %>" method="POST" class="delete-form">
+                                <button type="submit" class="delete-btn">删除</button>
+                            </form>
+                        </div>
+                    <% } %>
+                </li>
+            <% }); %>
+        </ul>
+        <div class="charts">
+            <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="viewsChart"></canvas>
+            </div>
+        </div>
+    </main>
+    <%- include('partials/footer') %>
+    <script>
+        // 分类统计图表
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(categoryCtx, {
+            type: 'pie',
+            data: {
+                labels: <%- JSON.stringify(categories) %>,
+                datasets: [{
+                    data: <%- JSON.stringify(categories.map(cat => news.filter(item => item.category === cat).length)) %>,
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FF6384', '#36A2EB'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: '新闻分类统计'
+                }
+            }
+        });
+
+        // 浏览量统计图表
+        const viewsCtx = document.getElementById('viewsChart').getContext('2d');
+        new Chart(viewsCtx, {
+            type: 'bar',
+            data: {
+                labels: <%- JSON.stringify(news.map(item => item.title.substring(0, 10) + '...')) %>,
+                datasets: [{
+                    label: '浏览量',
+                    data: <%- JSON.stringify(news.map(item => item.views)) %>,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                title: {
+                    display: true,
+                    text: '新闻浏览量统计'
+                }
+            }
+        });
+    </script>
+</body>
+</html>

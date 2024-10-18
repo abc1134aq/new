@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户管理 - 江西软件职业技术大学校园新闻系统</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>江西软件职业技术大学校园新闻系统</h1>
+        <nav>
+            <a href="/">首页</a>
+            <a href="/add">添加新闻</a>
+            <a href="/users">用户管理</a>
+            <a href="/logout">注销 (<%= user.name %>)</a>
+        </nav>
+    </header>
+    <main>
+        <h2>用户管理</h2>
+        <a href="/users/add" class="add-btn">添加用户</a>
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>用户名</th>
+                    <th>姓名</th>
+                    <th>角色</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% users.forEach(u => { %>
+                    <tr>
+                        <td><%= u.id %></td>
+                        <td><%= u.username %></td>
+                        <td><%= u.name %></td>
+                        <td><%= u.role %></td>
+                        <td>
+                            <a href="/users/edit/<%= u.id %>" class="edit-btn">编辑</a>
+                            <form action="/users/delete/<%= u.id %>" method="POST" class="delete-form">
+                                <button type="submit" class="delete-btn">删除</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <p>&copy; 2023 江西软件职业技术大学校园新闻系统</p>
+    </footer>
+</body>
+</html>
